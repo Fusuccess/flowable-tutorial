@@ -3,7 +3,7 @@
                   xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
                   xmlns:flowable="http://flowable.org/bpmn"
                   targetNamespace="http://www.flowable.org/processdef">
-    <bpmn:process id="leaveApproval" name="请假审批流程_fromLocal" isExecutable="true">
+    <bpmn:process id="leaveApproval" name="请假审批流程_fromFile" isExecutable="true">
         <bpmn:startEvent id="startEvent" name="开始"/>
         <bpmn:userTask id="applyTask" name="提交请假申请" flowable:assignee="${employee}"/>
         <bpmn:userTask id="approveTask" name="经理审批" flowable:assignee="${manager}"/>

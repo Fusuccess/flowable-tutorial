@@ -8,7 +8,6 @@
 ```tree
 tutorial02_deployment/
 ├── DeploymentController.java       # 流程部署的 HTTP 接口，支持通过浏览器或 Postman 触发部署
-├── DeploymentService.java          # 部署核心逻辑，包括从 classpath 和数据库部署的方法
 ├── flowable_process.sql            # 模拟数据库部署场景所需的建表脚本（保存流程 XML）
 └── README.md                       # 教程文档，包含部署方式、代码示例、常见问题等说明
 ```
@@ -23,15 +22,17 @@ application.properties 示例（Spring Boot 默认配置）：
 flowable.check-process-definitions=true
 ```
 #### 流程部署方式二：代码手动部署</br>
+
 ```java
+
 @Autowired
 private RepositoryService repositoryService;
 
 public void deployProcess() {
     Deployment deployment = repositoryService.createDeployment()
-        .addClasspathResource("bpmn/leave-approve.bpmn20.xml")
-        .name("请假流程部署")
-        .deploy();
+            .addClasspathResource("bpmn/leaveApproval.bpmn20.xml")
+            .name("请假流程部署")
+            .deploy();
 }
 ```
 #### 流程部署方式三：从数据库读取 XML 并部署</br>

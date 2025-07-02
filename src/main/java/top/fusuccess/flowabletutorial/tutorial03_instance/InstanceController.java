@@ -1,6 +1,6 @@
 package top.fusuccess.flowabletutorial.tutorial03_instance;
 
-import liquibase.pro.packaged.A;
+import liquibase.pro.packaged.S;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
@@ -36,88 +36,100 @@ public class InstanceController {
      * 启动成功后，实例信息会写入 ACT_RU_EXECUTION 表
      */
     @PostMapping("/start")
-    public List<String> start(String employee,String manager) {
+    public List<Map<String, Object>> start(String processKey, String employee, String manager) {
         Map<String, Object> vars = new HashMap<>();
         vars.put("employee", employee);
         vars.put("manager", manager);
 
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey("leaveApproval", vars);
-        System.out.println("流程实例ID: " + instance.getId());
-        System.out.println("流程定义ID: " + instance.getProcessDefinitionId());
-        List<String> instanceInfo = new ArrayList<>();
-        instanceInfo.add("【流程实例ID:" + instance.getId() + "】 【流程定义ID: " + instance.getProcessDefinitionId()+"】");
-        return instanceInfo;
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        Map<String, Object> instanceInfo = new HashMap<>();
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(processKey, vars);
+
+        instanceInfo.put("instanceId", instance.getId());
+        instanceInfo.put("processDefinitionId", instance.getProcessDefinitionId());
+        instanceInfo.put("processDefinitionName", instance.getProcessDefinitionName());
+        instanceInfo.put("processDefinitionVersion", instance.getProcessDefinitionVersion());
+        instanceInfo.put("employee", employee);
+        instanceInfo.put("manager", manager);
+        reportList.add(instanceInfo);
+        return reportList;
     }
 
     /**
      * 查询流程实例
      */
     @PostMapping("/instanceList")
-    public List<String> instanceList(String key) {
+    public List<Map<String, Object>> instanceList(String key) {
         List<ProcessInstance> instances = runtimeService
                 .createProcessInstanceQuery()
                 .processDefinitionKey(key)
                 .active()
                 .list();
 
-        List<String> instanceList = new ArrayList<>();
+        List<Map<String, Object>> reportList = new ArrayList<>();
         for (ProcessInstance pi : instances) {
-            instanceList.add("【运行中流程实例ID: " + pi.getId()+"】");
+            Map<String, Object> instanceInfo = new HashMap<>();
+            instanceInfo.put("instanceId", pi.getId());
+            instanceInfo.put("processDefinitionId", pi.getProcessDefinitionId());
+            instanceInfo.put("processDefinitionName", pi.getProcessDefinitionName());
+            instanceInfo.put("processDefinitionVersion", pi.getProcessDefinitionVersion());
+            instanceInfo.put("processDefinitionKey", pi.getProcessDefinitionKey());
+            instanceInfo.put("startTime", pi.getStartTime());
+            System.out.println(instanceInfo); // 打印到控制台
+            reportList.add(instanceInfo);
         }
-        return instanceList;
+        return reportList;
     }
 
     /**
      * 查询当前任务
      */
     @PostMapping("/taskListByUser")
-    public List<String> taskListByUser(String user) {
+    public List<Map<String, Object>>  taskListByUser(String processKey, String user) {
         List<Task> tasks = taskService
                 .createTaskQuery()
-                .processDefinitionKey("leaveApproval")
+                .processDefinitionKey(processKey)
                 .taskAssignee(user)
                 .list();
 
-        List<String> taskList = new ArrayList<>();
+        List<Map<String, Object>> reportList = new ArrayList<>();
         for (Task task : tasks) {
-            String assignee = task.getAssignee();
-            if (assignee != null) {
-                taskList.add("【当前任务ID：" + task.getId()+ "】【" + "任务名称：" + task.getName()+"】 【当前节点定义ID：" + task.getTaskDefinitionKey()+"】【任务当前审批人（assignee）：" + assignee+"】");
-            } else {
-                taskList.add("【当前任务ID：" + task.getId()+ "】【" + "任务名称：" + task.getName()+"】 【当前节点定义ID：" + task.getTaskDefinitionKey()+"】【"+"该任务尚未分配具体审批人（可能为候选组）"+"】");
-            }
+            Map<String, Object> info = new HashMap<>();
+            info.put("taskId", task.getId());
+            info.put("taskName", task.getName());
+            info.put("taskDefinitionKey", task.getTaskDefinitionKey());
+            info.put("assignee", task.getAssignee());
+            reportList.add(info);
         }
-        return taskList;
+
+        return reportList;
     }
+
     /**
      * 查询当前任务
      */
     @PostMapping("/taskListByInstanceId")
-    public List<String> taskListByInstanceId(String instanceId) {
+    public List<Map<String, Object>> taskListByInstanceId(String instanceId) {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+
         List<Task> tasks = taskService
                 .createTaskQuery()
                 .processInstanceId(instanceId)
                 .list();
 
-        List<String> taskList = new ArrayList<>();
         for (Task task : tasks) {
-            System.out.println("当前任务ID：" + task.getId());
-            System.out.println("任务名称：" + task.getName());
-            System.out.println("当前节点定义ID：" + task.getTaskDefinitionKey());
+            Map<String, Object> info = new HashMap<>();
+            info.put("taskId", task.getId());
+            info.put("taskName", task.getName());
+            info.put("taskDefinitionKey", task.getTaskDefinitionKey());
+            info.put("assignee", task.getAssignee());
+            reportList.add(info);
         }
-        for (Task task : tasks) {
-            String assignee = task.getAssignee();
-            if (assignee != null) {
-                taskList.add("【当前任务ID：" + task.getId()+ "】【" + "任务名称：" + task.getName()+"】 【当前节点定义ID：" + task.getTaskDefinitionKey()+"】【任务当前审批人（assignee）：" + assignee+"】");
-            } else {
-                taskList.add("【当前任务ID：" + task.getId()+ "】【" + "任务名称：" + task.getName()+"】 【当前节点定义ID：" + task.getTaskDefinitionKey()+"】【"+"该任务尚未分配具体审批人（可能为候选组）"+"】");
-            }
-        }
-        return taskList;
+        return reportList;
     }
 
     /**
-     * 查询并完成任务
+     * 完成任务
      * 说明：
      * 调用 complete() 会使流程推进到下一节点
      * 如果下一个任务是审批人 “manager”，那么需要切换用户再查任务
@@ -132,7 +144,9 @@ public class InstanceController {
      * 查看历史流程
      */
     @PostMapping("/historyList")
-    public List<String> historyList() {
+    public List<Map<String, Object>> historyList() {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+
         List<HistoricProcessInstance> finished = historyService
                 .createHistoricProcessInstanceQuery()
                 .finished().orderByProcessInstanceEndTime()
@@ -141,8 +155,16 @@ public class InstanceController {
 
         List<String> historyList = new ArrayList<>();
         for (HistoricProcessInstance h : finished) {
-            historyList.add("【流程：" + h.getName() + "，耗时：" + h.getDurationInMillis() + "ms】");
+            Map<String, Object> info = new HashMap<>();
+            info.put("instanceId", h.getId());
+            info.put("processDefinitionId", h.getProcessDefinitionId());
+            info.put("processDefinitionName", h.getProcessDefinitionName());
+            info.put("processDefinitionVersion", h.getProcessDefinitionVersion());
+            info.put("startTime", h.getStartTime());
+            info.put("endTime", h.getEndTime());
+            info.put("duration", h.getDurationInMillis());
+            reportList.add(info);
         }
-        return historyList;
+        return reportList;
     }
 }

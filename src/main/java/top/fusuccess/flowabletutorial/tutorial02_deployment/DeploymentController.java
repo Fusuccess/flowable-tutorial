@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/deploy")
@@ -20,37 +25,60 @@ public class DeploymentController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @PostMapping("/local")
-    public String deployFromLocal() {
-        Deployment deployment = repositoryService.createDeployment()
-                .addClasspathResource("bpmn/leave-approve.bpmn20.xml")
-                .name("请假流程部署")
-                .deploy();
+    @PostMapping("/file")
+    public List<Map<String, Object>> deployFromFile(String processKey) {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        Map<String, Object> info = new HashMap<>();
+        if (processKey == null || processKey.isEmpty()) {
+            info.put("error", "processKey不能为空");
+        }
 
-        System.out.println("部署ID：" + deployment.getId());
-        return "部署成功";
-    }
+        String filePath = "bpmn/" + processKey + ".bpmn20.xml";
+        URL resourceUrl = getClass().getClassLoader().getResource(filePath);
 
-    @PostMapping("/db")
-    public String deployFromDb() {
-        // 从数据库读取 BPMN XML 字符串
-        String sql = "SELECT process_xml FROM flowable_process WHERE process_key = ?";
-        String processKey = "leaveApproval";
-
-        String bpmnXml = jdbcTemplate.queryForObject(sql, new Object[]{processKey}, String.class);
-
-        if (bpmnXml != null && !bpmnXml.isEmpty()) {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8));
-
+        if (resourceUrl != null) {
             Deployment deployment = repositoryService.createDeployment()
-                    .addInputStream(processKey + ".bpmn20.xml", inputStream)
+                    .addClasspathResource("bpmn/" + processKey + ".bpmn20.xml")
                     .name("数据库流程部署：" + processKey)
                     .deploy();
 
-            System.out.println("数据库流程部署成功，部署ID：" + deployment.getId());
+            info.put("deployId", deployment.getId());
+            info.put("deployName", deployment.getName());
+            info.put("deployTime", deployment.getDeploymentTime());
+
         } else {
-            System.out.println("未找到流程定义 XML");
+            info.put("error", "流程定义文件不存在");
         }
-        return "部署成功";
+
+        reportList.add(info);
+        return reportList;
+    }
+
+    @PostMapping("/db")
+    public List<Map<String, Object>> deployFromDb(String processKey) {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        Map<String, Object> info = new HashMap<>();
+        if (processKey == null || processKey.isEmpty()) {
+            info.put("error", "processKey不能为空");
+        }
+        // 从数据库读取 BPMN XML 字符串
+        String sql = "SELECT process_xml FROM flowable_process WHERE process_key = ?";
+        List<String> bpmnXmlList = jdbcTemplate.query(sql, new Object[]{processKey}, (rs, rowNum) -> rs.getString("process_xml"));
+
+//            String bpmnXml = jdbcTemplate.queryForObject(sql, new Object[]{processKey}, String.class);
+
+        if (!bpmnXmlList.isEmpty()) {
+            String bpmnXml = bpmnXmlList.get(0);
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8));
+            Deployment deployment = repositoryService.createDeployment().addInputStream(processKey + ".bpmn20.xml", inputStream).name("数据库流程部署：" + processKey).deploy();
+            info.put("deployId", deployment.getId());
+            info.put("deployName", deployment.getName());
+            info.put("deployTime", deployment.getDeploymentTime());
+        } else {
+            info.put("error", "流程定义文件不存在");
+        }
+
+        reportList.add(info);
+        return reportList;
     }
 }
