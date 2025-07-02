@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:flowable="http://flowable.org/bpmn"
+                  targetNamespace="http://www.flowable.org/processdef">
+
+    <bpmn:process id="leaveApprovalDiagram" name="请假审批流程_fromFile" isExecutable="true">
+        <bpmn:startEvent id="startEvent" name="开始"/>
+        <bpmn:userTask id="applyTask" name="提交请假申请" flowable:assignee="${employee}"/>
+        <bpmn:userTask id="approveTask" name="经理审批" flowable:assignee="${manager}"/>
+        <bpmn:endEvent id="endEvent" name="结束"/>
+        <bpmn:sequenceFlow id="flow1" sourceRef="startEvent" targetRef="applyTask"/>
+        <bpmn:sequenceFlow id="flow2" sourceRef="applyTask" targetRef="approveTask"/>
+        <bpmn:sequenceFlow id="flow3" sourceRef="approveTask" targetRef="endEvent"/>
+    </bpmn:process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_leaveApprovalDiagram">
+        <bpmndi:BPMNPlane id="BPMNPlane_leaveApprovalDiagram" bpmnElement="leaveApprovalDiagram">
+            <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+                <dc:Bounds x="100" y="100" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+
+            <bpmndi:BPMNShape id="applyTask_di" bpmnElement="applyTask">
+                <dc:Bounds x="180" y="90" width="100" height="60"/>
+            </bpmndi:BPMNShape>
+
+            <bpmndi:BPMNShape id="approveTask_di" bpmnElement="approveTask">
+                <dc:Bounds x="320" y="90" width="100" height="60"/>
+            </bpmndi:BPMNShape>
+
+            <bpmndi:BPMNShape id="endEvent_di" bpmnElement="endEvent">
+                <dc:Bounds x="460" y="100" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+
+            <bpmndi:BPMNEdge id="flow1_di" bpmnElement="flow1">
+                <di:waypoint x="136" y="118"/>
+                <di:waypoint x="180" y="120"/>
+            </bpmndi:BPMNEdge>
+
+            <bpmndi:BPMNEdge id="flow2_di" bpmnElement="flow2">
+                <di:waypoint x="280" y="120"/>
+                <di:waypoint x="320" y="120"/>
+            </bpmndi:BPMNEdge>
+
+            <bpmndi:BPMNEdge id="flow3_di" bpmnElement="flow3">
+                <di:waypoint x="420" y="120"/>
+                <di:waypoint x="460" y="118"/>
+            </bpmndi:BPMNEdge>
+
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+
+</bpmn:definitions>
