@@ -39,7 +39,7 @@ public class DeploymentController {
         if (resourceUrl != null) {
             Deployment deployment = repositoryService.createDeployment()
                     .addClasspathResource("bpmn/" + processKey + ".bpmn20.xml")
-                    .name("数据库流程部署：" + processKey)
+                    .name(processKey)
                     .deploy();
 
             info.put("deployId", deployment.getId());
@@ -70,7 +70,7 @@ public class DeploymentController {
         if (!bpmnXmlList.isEmpty()) {
             String bpmnXml = bpmnXmlList.get(0);
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8));
-            Deployment deployment = repositoryService.createDeployment().addInputStream(processKey + ".bpmn20.xml", inputStream).name("数据库流程部署：" + processKey).deploy();
+            Deployment deployment = repositoryService.createDeployment().addInputStream(processKey + ".bpmn20.xml", inputStream).name(processKey).deploy();
             info.put("deployId", deployment.getId());
             info.put("deployName", deployment.getName());
             info.put("deployTime", deployment.getDeploymentTime());

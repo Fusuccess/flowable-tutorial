@@ -75,7 +75,6 @@ public class InstanceController {
             instanceInfo.put("processDefinitionVersion", pi.getProcessDefinitionVersion());
             instanceInfo.put("processDefinitionKey", pi.getProcessDefinitionKey());
             instanceInfo.put("startTime", pi.getStartTime());
-            System.out.println(instanceInfo); // 打印到控制台
             reportList.add(instanceInfo);
         }
         return reportList;
@@ -99,6 +98,7 @@ public class InstanceController {
             info.put("taskName", task.getName());
             info.put("taskDefinitionKey", task.getTaskDefinitionKey());
             info.put("assignee", task.getAssignee());
+            task.getProcessInstanceId();
             reportList.add(info);
         }
 

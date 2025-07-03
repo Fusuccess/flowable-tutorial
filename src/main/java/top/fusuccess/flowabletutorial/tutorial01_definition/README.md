@@ -18,6 +18,8 @@
 
 * 开始事件（startEvent）
 * 用户任务（userTask）
+  * ·定义该task节点负责人          
+* ·定义该task要填的信息
 * 服务任务（serviceTask）
 * 排他网关（exclusiveGateway）
 * 顺序流（sequenceFlow）
