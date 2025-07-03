@@ -37,13 +37,14 @@ public class FlowableTutorial05Controller {
         try {
             // 示例 formData: {"days":3,"reason":"出差"}
             taskService.setVariables(taskId, formData);
+            info.put("success", "任务完成");
         } catch (Exception e) {
             e.printStackTrace();
-            info.put("error", "提交表单数据失败");
+            info.put("error", "提交任务失败");
             reportList.add(info);
         }
         taskService.complete(taskId, formData);
-
+        reportList.add(info);
         return reportList;
     }
 

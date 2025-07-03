@@ -1,5 +1,6 @@
 package top.fusuccess.flowabletutorial.tutorial03_instance;
 
+import liquibase.pro.packaged.L;
 import liquibase.pro.packaged.S;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
@@ -136,8 +137,14 @@ public class InstanceController {
      * 如果下一个任务是审批人 “manager”，那么需要切换用户再查任务
      */
     @PostMapping("/taskComplete")
-    public void complete(String taskId) {
+    public List<Map<String, Object>> complete(String taskId) {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        Map<String, Object> info = new HashMap<>();
         taskService.complete(taskId);
+
+        info.put("success", "任务完成");
+        reportList.add(info);
+        return reportList;
     }
 
 
