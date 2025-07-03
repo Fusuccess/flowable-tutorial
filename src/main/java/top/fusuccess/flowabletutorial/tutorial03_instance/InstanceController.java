@@ -98,7 +98,7 @@ public class InstanceController {
             info.put("taskName", task.getName());
             info.put("taskDefinitionKey", task.getTaskDefinitionKey());
             info.put("assignee", task.getAssignee());
-            task.getProcessInstanceId();
+            info.put("processInstanceId", task.getProcessInstanceId());
             reportList.add(info);
         }
 
@@ -122,6 +122,7 @@ public class InstanceController {
             info.put("taskId", task.getId());
             info.put("taskName", task.getName());
             info.put("taskDefinitionKey", task.getTaskDefinitionKey());
+            info.put("processInstanceId", task.getProcessInstanceId());
             info.put("assignee", task.getAssignee());
             reportList.add(info);
         }

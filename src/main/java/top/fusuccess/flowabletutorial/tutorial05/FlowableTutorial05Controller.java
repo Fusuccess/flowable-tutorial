@@ -36,7 +36,7 @@ public class FlowableTutorial05Controller {
 
         try {
             // 示例 formData: {"days":3,"reason":"出差"}
-            taskService.setVariablesLocal(taskId, formData);
+            taskService.setVariables(taskId, formData);
         } catch (Exception e) {
             e.printStackTrace();
             info.put("error", "提交表单数据失败");
@@ -47,11 +47,11 @@ public class FlowableTutorial05Controller {
         return reportList;
     }
 
-    @GetMapping("/taskMessage/{processInstanceId}")
-    public List<Map<String, Object>> taskMessage(@PathVariable String processInstanceId) {
+    @GetMapping("/taskFormProperty")
+    public List<Map<String, Object>> taskMessage(String processInstanceId) {
         List<Map<String, Object>> reportList = new ArrayList<>();
 
-        Map<String, Object> vars = null;
+        Map<String, Object> vars ;
         // 优先查运行时变量
         if (runtimeService.createProcessInstanceQuery()
                 .processInstanceId(processInstanceId).singleResult() != null) {
@@ -60,6 +60,7 @@ public class FlowableTutorial05Controller {
             reportList.add(vars);
         }
         return reportList;
+    }
 
 //        @GetMapping("/historyMessage/{processInstanceId}")
 //        public Map<String, List<Object>> historyMessage (@PathVariable String processInstanceId){
@@ -75,7 +76,6 @@ public class FlowableTutorial05Controller {
 //                            Collectors.mapping(HistoricVariableInstance::getValue, Collectors.toList())
 //                    ));
 //            return varMap;
-        }
 /**
  * 根据taskId查询所在流程
  */
