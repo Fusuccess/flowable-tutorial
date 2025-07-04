@@ -1,4 +1,4 @@
-package top.fusuccess.flowabletutorial.tutorial_serviceTask;
+package top.fusuccess.flowabletutorial.tutorial08;
 
 public class MailSendImpl {
    public void sendMail(String from,String to,String subject,String content ) {

@@ -5,7 +5,7 @@
     <bpmn:userTask id="applyTask" name="提交请假申请" flowable:assignee="${employee}"/>
     <bpmn:userTask id="approveTask" name="经理审批" flowable:assignee="${manager}"/>
     <bpmn:endEvent id="endEvent" name="结束"/>
-    <serviceTask xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="mailSend" flowable:exclusive="false" name="邮件发送" flowable:class="top.fusuccess.flowabletutorial.tutorial_serviceTask.ServicesTask" flowable:skipExpression="${skipTask}"></serviceTask>
+    <serviceTask xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="mailSend" flowable:exclusive="false" name="邮件发送" flowable:class="top.fusuccess.flowabletutorial.tutorial08.ServicesTask" flowable:skipExpression="${skipTask}"></serviceTask>
     <bpmn:sequenceFlow id="flow1" sourceRef="startEvent" targetRef="applyTask"/>
     <bpmn:sequenceFlow id="flow2" sourceRef="applyTask" targetRef="mailSend"/>
     <bpmn:sequenceFlow id="flow3" sourceRef="approveTask" targetRef="endEvent"/>
