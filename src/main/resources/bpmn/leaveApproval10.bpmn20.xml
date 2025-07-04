@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="http://www.flowable.org/processdef">
+  <bpmn:message id="startMessageTask" name="启动消息" />  <!-- 添加的消息定义 -->
+  <bpmn:process id="leaveApproval10" name="请假审批流程_fromDb" isExecutable="true">
+    <startEvent xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="sid-8e4484ec-97d5-46da-8a96-18664e42a998" name="消息启动流程">
+      <messageEventDefinition id="messageEventDefinition" messageRef="startMessageTask"/>
+    </startEvent>
+    <bpmn:userTask id="applyTask" name="提交请假申请" flowable:assignee="${employee}"/>
+    <bpmn:userTask id="approveTask" name="经理审批" flowable:assignee="${manager}"/>
+    <bpmn:endEvent id="endEvent" name="结束"/>
+    <serviceTask xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="mailSend" flowable:exclusive="false" name="邮件发送" flowable:class="top.fusuccess.flowabletutorial.tutorial08.ServicesTask" flowable:skipExpression="${skipTask}"></serviceTask>
+    <bpmn:sequenceFlow id="flow1" sourceRef="sid-8e4484ec-97d5-46da-8a96-18664e42a998" targetRef="applyTask"/>
+    <bpmn:sequenceFlow id="flow2" sourceRef="applyTask" targetRef="mailSend"/>
+    <bpmn:sequenceFlow id="flow3" sourceRef="approveTask" targetRef="endEvent"/>
+    <sequenceFlow xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="sid-d8bd7448-cb5d-4a5c-be57-241141524f70" sourceRef="mailSend" targetRef="approveTask"></sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_leaveApproval10">
+    <bpmndi:BPMNPlane id="BPMNPlane_leaveApproval10" bpmnElement="leaveApproval10">
+      <bpmndi:BPMNShape id="applyTask_di" bpmnElement="applyTask">
+        <dc:Bounds x="110.0" y="117.5" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="approveTask_di" bpmnElement="approveTask">
+        <dc:Bounds x="330.0" y="117.5" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEvent_di" bpmnElement="endEvent">
+        <dc:Bounds x="436.99997" y="122.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flow1_di" bpmnElement="flow1">
+        <di:waypoint x="58.0" y="140.0"/>
+        <di:waypoint x="110.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow2_di" bpmnElement="flow2">
+        <di:waypoint x="190.0" y="140.0"/>
+        <di:waypoint x="220.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow3_di" bpmnElement="flow3">
+        <di:waypoint x="410.0" y="140.0"/>
+        <di:waypoint x="436.99994" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-6d987891-e04b-44f0-9f1b-f9cf7844e881" bpmnElement="mailSend">
+        <omgdc:Bounds xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" x="220.0" y="117.5" width="85.0" height="45.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-15bc585d-c6d7-4fee-a5f5-869d94053ad6" bpmnElement="sid-d8bd7448-cb5d-4a5c-be57-241141524f70">
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="305.0" y="140.0"></omgdi:waypoint>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="330.0" y="140.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-242a57b7-394f-4b17-8c14-eaa4d53373d3" bpmnElement="sid-8e4484ec-97d5-46da-8a96-18664e42a998">
+        <omgdc:Bounds xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" x="28.0" y="125.0" width="30.0" height="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
