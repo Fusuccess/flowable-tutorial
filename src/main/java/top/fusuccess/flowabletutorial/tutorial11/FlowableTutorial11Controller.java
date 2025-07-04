@@ -2,9 +2,11 @@ package top.fusuccess.flowabletutorial.tutorial11;
 
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
+import org.flowable.engine.TaskService;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,50 @@ import java.util.Map;
 public class FlowableTutorial11Controller {
     @Autowired
     private RepositoryService repositoryService;
+
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private RuntimeService runtimeService;
+
+    /**
+     * 查询当前任务
+     */
+    @PostMapping("/taskListByUser")
+    public List<Map<String, Object>> taskListByUser(String processKey, String user) {
+        List<Task> tasks = taskService
+                .createTaskQuery()
+                .processDefinitionKey(processKey)
+                .taskAssignee(user)
+                .list();
+
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        for (Task task : tasks) {
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(task.getProcessInstanceId())
+                    .singleResult();
+            if (processInstance != null && !processInstance.isSuspended()) {
+
+                ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                        .processDefinitionId(processInstance.getProcessDefinitionId())
+                        .singleResult();
+
+                Map<String, Object> info = new HashMap<>();
+                if (processDefinition != null) {
+                    info.put("processDefinitionId", processDefinition.getId());
+                }
+                info.put("taskId", task.getId());
+                info.put("taskName", task.getName());
+                info.put("taskDefinitionKey", task.getTaskDefinitionKey());
+                info.put("assignee", task.getAssignee());
+                info.put("processInstanceId", task.getProcessInstanceId());
+                reportList.add(info);
+            }
+        }
+
+        return reportList;
+    }
+
 
     /**
      * 暂停流程定义
