@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="http://www.flowable.org/processdef">
+  <bpmn:process id="leaveApproval12" name="请假审批流程_fromDb" isExecutable="true">
+    <bpmn:startEvent id="startEvent" name="开始"/>
+    <bpmn:userTask id="applyTask" name="提交请假申请" flowable:assignee="${employee}"/>
+    <bpmn:userTask id="approveTask" name="经理审批" flowable:assignee="${manager}">
+      <bpmn:extensionElements>
+        <flowable:formProperty id="approvalResult" name="审批结果" type="enum" required="true">
+          <flowable:value id="approve" name="同意"/>
+          <flowable:value id="reject" name="拒绝"/>
+        </flowable:formProperty>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+    <bpmn:endEvent id="endEvent" name="结束"/>
+    <serviceTask xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="mailSend" flowable:exclusive="false" name="邮件发送" flowable:class="top.fusuccess.flowabletutorial.tutorial08.ServicesTask" flowable:skipExpression="${skipTask}"/>
+    <bpmn:sequenceFlow id="flow1" sourceRef="startEvent" targetRef="applyTask"/>
+    <bpmn:sequenceFlow id="flow2" sourceRef="applyTask" targetRef="mailSend"/>
+    <bpmn:sequenceFlow id="approve-001" sourceRef="gateway-001" targetRef="endEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"><![CDATA[${approvalResult == 'approve'}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <sequenceFlow xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="sid-d8bd7448-cb5d-4a5c-be57-241141524f70" sourceRef="mailSend" targetRef="approveTask"/>
+    <exclusiveGateway xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="gateway-001" name="审批结果判断"/>
+    <sequenceFlow xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="sid-df652347-e4d3-4c5a-bee8-007225997dc9" sourceRef="approveTask" targetRef="gateway-001"/>
+    <sequenceFlow xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="reject-001" sourceRef="gateway-001" targetRef="applyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approvalResult == 'reject'}]]></conditionExpression>
+    </sequenceFlow>
+    <bpmn:textAnnotation id="textannotation-001">
+      <bpmn:text>enum: approve, reject</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="association-001" sourceRef="approveTask" targetRef="textannotation-001"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_leaveApproval12">
+    <bpmndi:BPMNPlane id="BPMNPlane_leaveApproval12" bpmnElement="leaveApproval12">
+      <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+        <dc:Bounds x="40.0" y="122.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="applyTask_di" bpmnElement="applyTask">
+        <dc:Bounds x="110.0" y="117.5" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="approveTask_di" bpmnElement="approveTask">
+        <dc:Bounds x="330.0" y="117.5" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEvent_di" bpmnElement="endEvent">
+        <dc:Bounds x="351.99997" y="292.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flow1_di" bpmnElement="flow1">
+        <di:waypoint x="76.0" y="140.0"/>
+        <di:waypoint x="110.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow2_di" bpmnElement="flow2">
+        <di:waypoint x="190.0" y="140.0"/>
+        <di:waypoint x="220.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow3_di" bpmnElement="approve-001">
+        <di:waypoint x="370.0" y="240.0"/>
+        <di:waypoint x="370.0" y="292.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-6d987891-e04b-44f0-9f1b-f9cf7844e881" bpmnElement="mailSend">
+        <omgdc:Bounds xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" x="220.0" y="117.5" width="85.0" height="45.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-15bc585d-c6d7-4fee-a5f5-869d94053ad6" bpmnElement="sid-d8bd7448-cb5d-4a5c-be57-241141524f70">
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="305.0" y="140.0"></omgdi:waypoint>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="330.0" y="140.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-1489fb69-cf4e-443a-a822-1a7f8a2f7ca9" bpmnElement="gateway-001">
+        <omgdc:Bounds xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" x="350.0" y="200.0" width="40.0" height="40.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-0ed16fd4-7d71-4965-aef0-58c0604e940e" bpmnElement="sid-df652347-e4d3-4c5a-bee8-007225997dc9">
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="370.0" y="162.49998"/>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="370.0" y="199.99998"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-25ae0065-ab11-49c0-a126-99504c1f5928" bpmnElement="reject-001">
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="350.0" y="220.0"/>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="150.0" y="220.0"/>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="150.0" y="162.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape bpmnElement="textannotation-001" id="BPMNShape_textannotation-001">
+        <dc:Bounds height="30.0" width="144.0" x="340.0" y="60.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="association-001" id="BPMNEdge_association-001">
+        <di:waypoint y="117.5" x="410.0"/>
+        <di:waypoint y="90.0" x="412.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
