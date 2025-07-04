@@ -4,7 +4,7 @@ import org.flowable.engine.delegate.TaskListener;
 import org.flowable.task.service.delegate.DelegateTask;
 import org.springframework.stereotype.Component;
 
-
+@Component("ApprovalResultListener")
 public class ApprovalResultListener implements TaskListener {
     public ApprovalResultListener() {
     }

@@ -126,8 +126,7 @@ public class RejectController {
 
     // 3. 完成任务（通用方法）
     @PostMapping("/complete")
-    public List<Map<String, Object>> completeTask(@RequestParam String taskId,
-                               @RequestParam(required = false) String approvalResult) {
+    public List<Map<String, Object>> completeTask(@RequestParam String taskId,String approvalResult) {
         Map<String, Object> variables = new HashMap<>();
         if (approvalResult != null) {
             variables.put("approvalResult", approvalResult);
