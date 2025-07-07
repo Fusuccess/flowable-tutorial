@@ -63,15 +63,6 @@ public class FlowableTutorial15Controller {
             //查询当前任务节点ID
             ProcessInstance instance = runtimeService.createProcessInstanceQuery().processInstanceId(instanceId).singleResult();
 
-            List<Execution> executions = runtimeService.createExecutionQuery()
-                    .processInstanceId(instanceId)
-                    .list();
-            for (Execution execution : executions) {
-                System.out.println("Execution ID: " + execution.getId());
-                System.out.println("Activity ID: " + execution.getActivityId());
-                System.out.println("Is Ended: " + execution.isEnded());
-            }
-
             if (instance == null) {
                 instanceInfo.put("code", HttpStatus.NOT_FOUND.value());
                 instanceInfo.put("message", "流程实例不存在: " + instanceId);

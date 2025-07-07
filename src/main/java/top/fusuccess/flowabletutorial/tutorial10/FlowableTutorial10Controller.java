@@ -34,7 +34,7 @@ public class FlowableTutorial10Controller {
 
         List<Map<String, Object>> reportList = new ArrayList<>();
         Map<String, Object> instanceInfo = new HashMap<>();
-        ProcessInstance instance = runtimeService.startProcessInstanceByMessage("startMessageTask", vars);
+        ProcessInstance instance = runtimeService.startProcessInstanceByMessage(startMessage, vars);
 
         instanceInfo.put("instanceId", instance.getId());
         instanceInfo.put("processDefinitionId", instance.getProcessDefinitionId());
