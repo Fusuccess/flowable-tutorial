@@ -1,9 +1,6 @@
-package top.fusuccess.flowabletutorial.tutorial05_reject;
+package top.fusuccess.flowabletutorial.tutorial09_reject;
 
-import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.runtime.ProcessInstance;
-import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +12,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/leave")
 public class RejectController {
-
-    @Autowired
-    private RuntimeService runtimeService;
 
     @Autowired
     private TaskService taskService;

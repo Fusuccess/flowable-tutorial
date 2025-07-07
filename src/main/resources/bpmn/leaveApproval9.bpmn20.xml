@@ -18,7 +18,7 @@
         <bpmn:userTask id="approveTask" name="经理审批" flowable:assignee="${manager}">
             <bpmn:extensionElements>
                 <!-- 任务完成监听器 - 捕获审批结果 -->
-                <flowable:taskListener event="complete" class="top.fusuccess.flowabletutorial.tutorial05_reject.ApprovalResultListener"/>
+                <flowable:taskListener event="complete" class="top.fusuccess.flowabletutorial.tutorial09_reject.ApprovalResultListener"/>
             </bpmn:extensionElements>
         </bpmn:userTask>
 
