@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:flowable="http://flowable.org/bpmn"
+                  targetNamespace="http://www.flowable.org/processdef">
+    <bpmn:process id="leaveApproval13" name="Parallel Approval Process" isExecutable="true">
+        <!-- 开始事件 -->
+        <bpmn:startEvent id="start" name="开始" />
+
+        <!-- 请假申请任务 -->
+        <bpmn:userTask id="apply" name="申请请假" flowable:assignee="${apply}" />
+
+        <!-- 并行网关，进入两个审批路径 -->
+        <bpmn:parallelGateway id="split" name="分支" />
+
+        <!-- 人事部门审批 -->
+        <bpmn:userTask id="hrApproval" name="人事审批" flowable:assignee="${hrApproval}" />
+        <!-- 领导审批 -->
+        <bpmn:userTask id="leaderApproval" name="领导审批" flowable:assignee="${leaderApproval}" />
+
+        <!-- 并行合并网关 -->
+        <bpmn:parallelGateway id="join" name="合并" />
+
+        <!-- 审批结束 -->
+        <bpmn:endEvent id="end" name="流程结束" />
+
+        <!-- 连接线 -->
+        <bpmn:sequenceFlow id="flow1" sourceRef="start" targetRef="apply" />
+        <bpmn:sequenceFlow id="flow2" sourceRef="apply" targetRef="split" />
+
+        <bpmn:sequenceFlow id="flow3" sourceRef="split" targetRef="hrApproval" />
+        <bpmn:sequenceFlow id="flow4" sourceRef="split" targetRef="leaderApproval" />
+
+        <bpmn:sequenceFlow id="flow5" sourceRef="hrApproval" targetRef="join" />
+        <bpmn:sequenceFlow id="flow6" sourceRef="leaderApproval" targetRef="join" />
+
+        <bpmn:sequenceFlow id="flow7" sourceRef="join" targetRef="end" />
+    </bpmn:process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_leaveApproval13">
+        <bpmndi:BPMNPlane bpmnElement="leaveApproval13" id="BPMNPlane_leaveApproval13">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <dc:Bounds height="30.0" width="30.0" x="100.0" y="150.0" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="apply" id="BPMNShape_apply">
+                <dc:Bounds height="80.0" width="100.0" x="200.0" y="125.0" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="split" id="BPMNShape_split">
+                <dc:Bounds height="40.0" width="40.0" x="350.0" y="145.0" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="hrApproval" id="BPMNShape_hrApproval">
+                <dc:Bounds height="80.0" width="100.0" x="450.0" y="50.0" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="leaderApproval" id="BPMNShape_leaderApproval">
+                <dc:Bounds height="80.0" width="100.0" x="450.0" y="220.0" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="join" id="BPMNShape_join">
+                <dc:Bounds height="40.0" width="40.0" x="600.0" y="145.0" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <dc:Bounds height="30.0" width="30.0" x="700.0" y="150.0" />
+            </bpmndi:BPMNShape>
+
+            <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+                <di:waypoint x="130.0" y="165.0"/>
+                <di:waypoint x="200.0" y="165.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+                <di:waypoint x="300.0" y="165.0"/>
+                <di:waypoint x="350.0" y="165.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+                <di:waypoint x="370.0" y="145.0"/>
+                <di:waypoint x="370.0" y="90.0"/>
+                <di:waypoint x="450.0" y="90.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+                <di:waypoint x="370.0" y="185.0"/>
+                <di:waypoint x="370.0" y="260.0"/>
+                <di:waypoint x="450.0" y="260.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+                <di:waypoint x="550.0" y="90.0"/>
+                <di:waypoint x="620.0" y="90.0"/>
+                <di:waypoint x="620.0" y="145.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+                <di:waypoint x="550.0" y="260.0"/>
+                <di:waypoint x="620.0" y="260.0"/>
+                <di:waypoint x="620.0" y="185.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+                <di:waypoint x="640.0" y="165.0"/>
+                <di:waypoint x="700.0" y="165.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

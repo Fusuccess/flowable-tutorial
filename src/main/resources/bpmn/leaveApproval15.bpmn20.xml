@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="http://www.flowable.org/processdef">
+  <bpmn:process id="leaveApproval15" name="请假审批流程_fromDb" isExecutable="true">
+    <bpmn:startEvent id="startEvent" name="开始"/>
+    <bpmn:userTask id="apply" name="提交请假申请" flowable:assignee="${applyUser}"/>
+    <bpmn:userTask id="managerApproval" name="经理审批" flowable:assignee="${managerApprovalUser}"/>
+    <bpmn:userTask id="hrApproval" name="人事审批" flowable:assignee="${hrApprovalUser}"/>
+    <bpmn:endEvent id="endEvent" name="结束"/>
+    <bpmn:sequenceFlow id="flow1" sourceRef="startEvent" targetRef="apply"/>
+    <bpmn:sequenceFlow id="flow3" sourceRef="managerApproval" targetRef="hrApproval"/>
+    <sequenceFlow xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="sid-d8bd7448-cb5d-4a5c-be57-241141524f70" sourceRef="apply" targetRef="managerApproval"></sequenceFlow>
+    <sequenceFlow xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" id="sid-48c9aee2-6101-42f8-83bf-a6f6c70b4188" sourceRef="hrApproval" targetRef="endEvent"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_leaveApproval15">
+    <bpmndi:BPMNPlane id="BPMNPlane_leaveApproval15" bpmnElement="leaveApproval15">
+      <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+        <dc:Bounds x="40.0" y="122.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="applyTask_di" bpmnElement="apply">
+        <dc:Bounds x="110.0" y="117.5" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="approveTask_di" bpmnElement="managerApproval">
+        <dc:Bounds x="220.0" y="117.500015" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEvent_di" bpmnElement="endEvent">
+        <dc:Bounds x="436.99997" y="122.0" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="flow1_di" bpmnElement="flow1">
+        <di:waypoint x="76.0" y="140.0"/>
+        <di:waypoint x="110.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow2_di" bpmnElement="flow2">
+        <di:waypoint x="190.0" y="140.0"/>
+        <di:waypoint x="220.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow3_di" bpmnElement="flow3">
+        <di:waypoint x="300.0" y="140.00002"/>
+        <di:waypoint x="326.51837" y="139.99998"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-15bc585d-c6d7-4fee-a5f5-869d94053ad6" bpmnElement="sid-d8bd7448-cb5d-4a5c-be57-241141524f70">
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="190.0" y="140.00002"></omgdi:waypoint>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="220.0" y="140.00002"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="sid-b2f0994c-b635-430f-a81d-996866b6c7b8" bpmnElement="hrApproval">
+        <omgdc:Bounds xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" x="326.5184" y="117.499985" width="80.0" height="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-60882365-858f-4f16-a30e-f3ef207e5f5d" bpmnElement="sid-48c9aee2-6101-42f8-83bf-a6f6c70b4188">
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="406.5184" y="139.99998"/>
+        <omgdi:waypoint xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" x="436.99997" y="140.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
