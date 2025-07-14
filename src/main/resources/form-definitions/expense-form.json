@@ -1,0 +1,44 @@
+{
+  "formKey": "expense-form",
+  "title": "报销申请表单",
+  "fields": [
+    {
+      "id": "expenseType",
+      "label": "报销类型",
+      "type": "select",
+      "required": true,
+      "options": [
+        { "label": "差旅费", "value": "travel" },
+        { "label": "交通费", "value": "transport" },
+        { "label": "业务招待费", "value": "entertainment" },
+        { "label": "其他", "value": "other" }
+      ]
+    },
+    {
+      "id": "amount",
+      "label": "报销金额（元）",
+      "type": "number",
+      "required": true,
+      "min": 0
+    },
+    {
+      "id": "description",
+      "label": "费用说明",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "invoiceCount",
+      "label": "发票张数",
+      "type": "number",
+      "required": false,
+      "min": 0
+    },
+    {
+      "id": "expenseDate",
+      "label": "发生日期",
+      "type": "date",
+      "required": true
+    }
+  ]
+}

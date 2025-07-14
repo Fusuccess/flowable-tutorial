@@ -1,0 +1,39 @@
+{
+  "formKey": "leave-form",
+  "title": "请假申请表单",
+  "fields": [
+    {
+      "id": "reason",
+      "label": "请假原因",
+      "type": "textarea",
+      "required": true,
+      "placeholder": "请说明请假原因"
+    },
+    {
+      "id": "days",
+      "label": "请假天数",
+      "type": "number",
+      "required": true,
+      "min": 1
+    },
+    {
+      "id": "startDate",
+      "label": "开始日期",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "endDate",
+      "label": "结束日期",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "contactPhone",
+      "label": "联系方式",
+      "type": "text",
+      "required": false,
+      "placeholder": "可选填"
+    }
+  ]
+}
