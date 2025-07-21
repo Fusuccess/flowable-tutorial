@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,6 +57,30 @@ public class FlowableTutorial19Controller {
         result.put("processInstanceId", task.getProcessInstanceId());
 
         reportList.add(result);
+        return reportList;
+    }
+
+    //提交
+    @PostMapping("/submitProperty")
+    public List<Map<String, Object>> submitProperty(String taskId, @RequestBody Map<String, String> formData ) {
+
+        Map<String, Object> variables = new HashMap<>();
+
+        //提交表单并提交任务写法
+        for (Map.Entry<String, String> entry : formData.entrySet()) {
+            variables.put(entry.getKey(), entry.getValue());
+        }
+        taskService.complete(taskId, variables);
+
+        //不提交任务只提交表单写法
+        formData.forEach((key, value) -> {
+            taskService.setVariableLocal(taskId, key, value);
+        });
+
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        Map<String, Object> info = new HashMap<>();
+        info.put("message", "表单已提交");
+        reportList.add(info);
         return reportList;
     }
 
