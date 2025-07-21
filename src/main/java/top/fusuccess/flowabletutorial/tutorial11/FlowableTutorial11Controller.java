@@ -62,6 +62,7 @@ public class FlowableTutorial11Controller {
                 info.put("taskDefinitionKey", task.getTaskDefinitionKey());
                 info.put("assignee", task.getAssignee());
                 info.put("processInstanceId", task.getProcessInstanceId());
+                info.put("formKey", task.getFormKey());
                 reportList.add(info);
             }
         }

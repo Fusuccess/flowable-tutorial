@@ -27,9 +27,6 @@ public class FlowableTutorial15Controller {
 
     @Autowired
     private RuntimeService runtimeService;
-    @Autowired
-    private RepositoryService repositoryService;
-
     @PostMapping("/start")
     public List<Map<String, Object>> startProcess(String processKey, String applyUser, String managerApprovalUser, String hrApprovalUser) {
         Map<String, Object> vars = new HashMap<>();
