@@ -1,10 +1,12 @@
 package top.fusuccess.flowabletutorial.tutorial18;
 
 import org.flowable.engine.FormService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.form.FormProperty;
 import org.flowable.engine.form.TaskFormData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +21,10 @@ public class FlowableTutorial18Controller {
 
     @Autowired
     private FormService formService;
+
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     @PostMapping("/getProperty")
     public List<Map<String, Object>> getStartForm(String taskId) {
@@ -46,6 +52,33 @@ public class FlowableTutorial18Controller {
             formReportList.add(formPropertyRepresentation);
         }
         reportList.add(new HashMap(){{put("form", formReportList);}});
+        return reportList;
+    }
+
+    //提交
+    @PostMapping("/submitProperty")
+    public List<Map<String, Object>> submitProperty(String taskId, @RequestBody Map<String, String> formData ) {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        formService.submitTaskFormData(taskId, formData);
+
+        Map<String, Object> info = new HashMap<>();
+        info.put("message", "表单已提交");
+        reportList.add(info);
+        return reportList;
+    }
+
+    //获取表单内容
+    @PostMapping("/getPropertyValue")
+    public List<Map<String, Object>> getPropertyValue(String procInstId) {
+        // 获取流程变量
+        Object reason = runtimeService.getVariable(procInstId, "reason");
+
+        Map<String, Object> variables = runtimeService.getVariables(procInstId);
+
+        List<Map<String, Object>> reportList = new ArrayList<>();
+        reportList.add(new HashMap(){{put("指定获取流程变量reason", reason);}});
+        reportList.add(new HashMap(){{put("获取所有流程变量variables", variables);}});
+
         return reportList;
     }
 

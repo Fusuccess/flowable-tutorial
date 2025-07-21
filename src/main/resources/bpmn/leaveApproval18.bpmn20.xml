@@ -12,7 +12,7 @@
       <extensionElements>
         <flowable:formProperty id="reason" name="请假事由" type="string" variable="reason" required="true"/>
         <flowable:formProperty id="days" name="请假天数" type="long" variable="days" required="true"/>
-        <flowable:formProperty id="dateTime" name="请假日期" type="date" expression="dataTime" datePattern="MM-dd-yyyy" required="true"/>
+        <flowable:formProperty id="dateTime" name="请假日期" type="date" datePattern="MM-dd-yyyy" required="true"/>
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
       </extensionElements>
     </userTask>
