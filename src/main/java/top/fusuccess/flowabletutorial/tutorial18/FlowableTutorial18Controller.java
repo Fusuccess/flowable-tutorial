@@ -2,8 +2,10 @@ package top.fusuccess.flowabletutorial.tutorial18;
 
 import org.flowable.engine.FormService;
 import org.flowable.engine.RuntimeService;
+import org.flowable.engine.TaskService;
 import org.flowable.engine.form.FormProperty;
 import org.flowable.engine.form.TaskFormData;
+import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,9 @@ public class FlowableTutorial18Controller {
 
     @Autowired
     private RuntimeService runtimeService;
+
+    @Autowired
+    private TaskService taskService;
 
     @PostMapping("/getProperty")
     public List<Map<String, Object>> getStartForm(String taskId) {
@@ -59,7 +64,16 @@ public class FlowableTutorial18Controller {
     @PostMapping("/submitProperty")
     public List<Map<String, Object>> submitProperty(String taskId, @RequestBody Map<String, String> formData ) {
         List<Map<String, Object>> reportList = new ArrayList<>();
+
+        //提交表单并提交任务写法
         formService.submitTaskFormData(taskId, formData);
+
+        //不提交任务只提交表单写法
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processInstanceId = task.getProcessInstanceId();
+        formData.forEach((key, value) -> {
+            runtimeService.setVariable(processInstanceId, key, value);
+        });
 
         Map<String, Object> info = new HashMap<>();
         info.put("message", "表单已提交");
