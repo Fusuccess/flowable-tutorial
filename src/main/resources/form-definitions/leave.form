@@ -1,0 +1,24 @@
+{
+  "key": "leave",
+  "name": "请假申请表单",
+  "fields": [
+    {
+      "id": "reason",
+      "name": "请假原因",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "days",
+      "name": "请假天数",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "startDate",
+      "name": "开始日期",
+      "type": "date",
+      "required": true
+    }
+  ]
+}
